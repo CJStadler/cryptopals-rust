@@ -1,6 +1,6 @@
 extern crate hex;
 
-pub fn decode_xor(encoded: &[u8]) -> String {
+pub fn decode_xor(encoded: &[u8]) -> (String, f64) {
     let mut best = String::new();
     let mut best_score = 0.0;
 
@@ -19,7 +19,7 @@ pub fn decode_xor(encoded: &[u8]) -> String {
         }
     }
 
-    best
+    (best, best_score)
 }
 
 fn decode_with_key(encoded: &[u8], key: u8) -> Vec<u8> {
@@ -53,6 +53,7 @@ mod tests {
     fn should_decode_the_example() {
         let encoded = hex::decode("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736").unwrap();
         let expected = "Cooking MC\'s like a pound of bacon";
-        assert_eq!(expected, decode_xor(&encoded));
+        let (decoded, _) = decode_xor(&encoded);
+        assert_eq!(expected, decoded);
     }
 }
