@@ -1,5 +1,3 @@
-extern crate hex;
-
 pub fn repeating_key_xor_encode(message: &[u8], key: &[u8]) -> Vec<u8> {
     let key_len = key.len();
     message.iter().enumerate().map(|(i, e)| {
@@ -11,6 +9,7 @@ pub fn repeating_key_xor_encode(message: &[u8], key: &[u8]) -> Vec<u8> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    extern crate hex;
 
     #[test]
     fn should_encode_the_example() {
