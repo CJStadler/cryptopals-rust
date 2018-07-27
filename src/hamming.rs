@@ -1,8 +1,11 @@
 pub fn distance(a: &[u8], b: &[u8]) -> usize {
-    a.iter().enumerate().map(|(i, a_element)| {
-        let b_element = b[i];
-        byte_distance(a_element, &b_element)
-    }).sum()
+    a.iter()
+        .enumerate()
+        .map(|(i, a_element)| {
+            let b_element = b[i];
+            byte_distance(a_element, &b_element)
+        })
+        .sum()
 }
 
 fn byte_distance(a: &u8, b: &u8) -> usize {

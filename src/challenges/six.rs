@@ -1,5 +1,5 @@
-use std::collections::BinaryHeap;
 use std::cmp::Ordering;
+use std::collections::BinaryHeap;
 
 use challenges::three;
 use english_score::english_score;
@@ -12,14 +12,16 @@ const BLOCKS_TO_CHECK: usize = 6;
 pub fn decode_repeating_key_xor(ciphertext: &[u8]) -> (Vec<u8>, Vec<u8>) {
     let keysizes = find_best_keysizes(ciphertext);
 
-    let (_, _, message_and_key) = keysizes.iter().
-        map(|keysize| {
+    let (_, _, message_and_key) = keysizes
+        .iter()
+        .map(|keysize| {
             let (message, key) = decode_with_keysize(ciphertext, *keysize);
             let score = english_score(&message);
-            let negative_keysize = - (*keysize as i64); // So that the lowest keysize is the max.
+            let negative_keysize = -(*keysize as i64); // So that the lowest keysize is the max.
             (score, negative_keysize, (message, key))
-        }).
-        max().unwrap();
+        })
+        .max()
+        .unwrap();
 
     message_and_key
 }
@@ -64,7 +66,9 @@ fn find_best_keysizes(ciphertext: &[u8]) -> Vec<usize> {
 
     impl Ord for KeysizeDistance {
         fn cmp(&self, other: &KeysizeDistance) -> Ordering {
-            other.distance.cmp(&self.distance)
+            other
+                .distance
+                .cmp(&self.distance)
                 .then_with(|| self.keysize.cmp(&other.keysize))
         }
     }
@@ -84,7 +88,10 @@ fn find_best_keysizes(ciphertext: &[u8]) -> Vec<usize> {
 
     for keysize in 2..max_keysize {
         let distance = distance_for_keysize(ciphertext, keysize);
-        keysize_distances.push(KeysizeDistance { keysize: keysize, distance: distance });
+        keysize_distances.push(KeysizeDistance {
+            keysize: keysize,
+            distance: distance,
+        });
     }
 
     let mut results = Vec::with_capacity(BEST_KEYSIZES_TO_COLLECT);
@@ -120,10 +127,10 @@ mod tests {
     extern crate base64;
     extern crate hex;
 
+    use super::*;
     use std::fs::File;
     use std::io::Read;
     use std::str::from_utf8;
-    use super::*;
 
     #[test]
     fn should_decode_the_example() {
@@ -143,7 +150,8 @@ mod tests {
     fn ciphertext_from_file() -> Vec<u8> {
         let mut base64_encoded = String::new();
         let mut file = File::open("data/6.txt").expect("File not found.");
-        file.read_to_string(&mut base64_encoded).expect("Read error");
+        file.read_to_string(&mut base64_encoded)
+            .expect("Read error");
 
         base64_encoded = str::replace(&base64_encoded, "\n", "");
 
@@ -159,8 +167,9 @@ mod tests {
 
     #[test]
     fn should_decode_the_message_from_five() {
-        let encoded_hex = "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272\
-            a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f";
+        let encoded_hex =
+            "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272\
+             a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f";
         let ciphertext = hex::decode(&encoded_hex).expect("hex error");
 
         let (decoded_bytes, key_bytes) = decode_repeating_key_xor(&ciphertext);
@@ -169,7 +178,7 @@ mod tests {
 
         let expected_key = "ICE";
         let expected_message = "Burning 'em, if you ain't quick and nimble\n\
-            I go crazy when I hear a cymbal";
+                                I go crazy when I hear a cymbal";
 
         assert_eq!(expected_key, guessed_key);
         assert_eq!(expected_message, decoded_message)

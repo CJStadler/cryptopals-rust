@@ -33,7 +33,9 @@ mod tests {
 
     #[test]
     fn should_decode_the_example() {
-        let encoded = hex::decode("1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736").unwrap();
+        let encoded = hex::decode(
+            "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736",
+        ).unwrap();
         let expected = "Cooking MC\'s like a pound of bacon";
         let (decoded, _, _) = decode_xor(&encoded);
         assert_eq!(expected, str::from_utf8(&decoded).expect("UTF-8 error"));

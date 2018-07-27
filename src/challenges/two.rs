@@ -1,9 +1,10 @@
 extern crate hex;
 
 pub fn xor_vectors(a: &[u8], b: &[u8]) -> Vec<u8> {
-    a.iter().enumerate().
-        map(|(i, &a_element)| a_element ^ b[i]).
-        collect()
+    a.iter()
+        .enumerate()
+        .map(|(i, &a_element)| a_element ^ b[i])
+        .collect()
 }
 
 #[cfg(test)]

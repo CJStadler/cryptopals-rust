@@ -35,6 +35,9 @@ mod tests {
     fn should_find_the_encoded_string() {
         let filename = "data/4.txt";
         let expected = "Now that the party is jumping\n";
-        assert_eq!(expected, str::from_utf8(&decode_line_in_file(&filename)).expect("UTF-8 error"));
+        assert_eq!(
+            expected,
+            str::from_utf8(&decode_line_in_file(&filename)).expect("UTF-8 error")
+        );
     }
 }
