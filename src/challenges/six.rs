@@ -79,20 +79,18 @@ fn find_best_keysizes(ciphertext: &[u8]) -> Vec<usize> {
         }
     }
 
-    let mut keysize_distances = BinaryHeap::new();
     let max_keysize = if MAX_KEYSIZE > (ciphertext.len() / BLOCKS_TO_CHECK) {
         ciphertext.len() / BLOCKS_TO_CHECK
     } else {
         MAX_KEYSIZE
     };
 
-    for keysize in 2..max_keysize {
-        let distance = distance_for_keysize(ciphertext, keysize);
-        keysize_distances.push(KeysizeDistance {
+    let mut keysize_distances: BinaryHeap<KeysizeDistance> = (2..max_keysize)
+        .map(|keysize| KeysizeDistance {
             keysize: keysize,
-            distance: distance,
-        });
-    }
+            distance: distance_for_keysize(ciphertext, keysize),
+        })
+        .collect();
 
     let mut results = Vec::with_capacity(BEST_KEYSIZES_TO_COLLECT);
 
