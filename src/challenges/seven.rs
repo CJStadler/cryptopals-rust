@@ -2,7 +2,7 @@ extern crate openssl;
 
 use self::openssl::symm::{decrypt, Cipher};
 
-fn decode_aes_128_ecb(ciphertext: &[u8], key: &[u8]) -> Vec<u8> {
+pub fn decode_aes_128_ecb(ciphertext: &[u8], key: &[u8]) -> Vec<u8> {
     decrypt(Cipher::aes_128_ecb(), key, None, ciphertext).unwrap()
 }
 
