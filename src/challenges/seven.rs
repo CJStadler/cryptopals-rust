@@ -3,7 +3,7 @@ extern crate openssl;
 use self::openssl::symm::{decrypt, Cipher};
 
 pub fn decode_aes_128_ecb(ciphertext: &[u8], key: &[u8]) -> Vec<u8> {
-    decrypt(Cipher::aes_128_ecb(), key, None, ciphertext).unwrap()
+    decrypt(Cipher::aes_128_ecb(), key, None, ciphertext).expect("AES 128 decoding error.")
 }
 
 #[cfg(test)]
@@ -40,7 +40,7 @@ mod tests {
 
     fn solution_from_file() -> String {
         let mut message = String::new();
-        let mut file = File::open("data/7_solution.txt").expect("File not found.");
+        let mut file = File::open("data/funky.txt").expect("File not found.");
         file.read_to_string(&mut message).expect("Read error");
         message
     }

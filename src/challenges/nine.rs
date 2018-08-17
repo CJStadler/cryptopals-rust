@@ -12,6 +12,16 @@ pub fn pkcs_pad(message: &[u8], block_length: usize) -> Vec<u8> {
     padded
 }
 
+pub fn pkcs_unpad(padded_message: &[u8]) -> &[u8] {
+    match padded_message.last() {
+        Some(padding_size) => {
+            let new_length = padded_message.len() - (*padding_size as usize);
+            &padded_message[0..new_length]
+        }
+        None => padded_message,
+    }
+}
+
 #[cfg(test)]
 mod tests {
     extern crate hex;
@@ -30,6 +40,19 @@ mod tests {
         assert_eq!(
             b"YELLOW SUBMARINE\x04\x04\x04\x04".to_vec(),
             pkcs_pad(b"YELLOW SUBMARINE", 20)
+        );
+    }
+
+    #[test]
+    fn should_unpad_the_message_based_on_the_last_byte() {
+        let message = vec![1, 2, 3];
+
+        assert_eq!(message, pkcs_unpad(&vec![1, 2, 3, 3, 3, 3]));
+        assert_eq!(message, pkcs_unpad(&vec![1, 2, 3, 1]));
+        assert_eq!(message, pkcs_unpad(&vec![1, 2, 3, 5, 5, 5, 5, 5]));
+        assert_eq!(
+            b"YELLOW SUBMARINE",
+            pkcs_unpad(b"YELLOW SUBMARINE\x04\x04\x04\x04")
         );
     }
 }
